@@ -10,8 +10,8 @@ import gc
 pd.set_option("display.precision", 8)
 
 def data_update():
-    #df_crypto = pd.read_csv('market_data/binance.txt')
-    df_crypto = pd.read_csv('market_data/binance_us.txt')
+    df_crypto = pd.read_csv('market_data/binance.txt')
+    #df_crypto = pd.read_csv('market_data/binance_us.txt')
     df_stocks = pd.read_csv('market_data/stocks.txt')
     df_indexes = pd.read_csv('market_data/indexes.txt')
     df_futures = pd.read_csv('market_data/futures.txt')
