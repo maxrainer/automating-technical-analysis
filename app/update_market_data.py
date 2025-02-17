@@ -4,24 +4,24 @@ import datetime as dt
 import pandas as pd
 
 def update_market_data():
-    # try:
-    #     url = 'https://api.binance.com/api/v3/exchangeInfo'
-    #     data = requests.get(url).json()
-    #     df_binance = pd.DataFrame(data['symbols'])[pd.DataFrame(data['symbols'])['status'] == 'TRADING'][['symbol', 'baseAsset', 'quoteAsset']]
-    #     df_binance = df_binance[(df_binance['quoteAsset'].isin(['BNB', 'BTC', 'BUSD', 'ETH', 'USDT']))]
-    #     df_binance.columns = ['Binance Pair', 'Currency', 'Market']
-    #     df_binance = df_binance.reset_index(drop = True)
-    #     df_binance.loc[0, 'Last Update'] = dt.date.today()
+    try:
+        url = 'https://api.binance.com/api/v3/exchangeInfo'
+        data = requests.get(url).json()
+        df_binance = pd.DataFrame(data['symbols'])[pd.DataFrame(data['symbols'])['status'] == 'TRADING'][['symbol', 'baseAsset', 'quoteAsset']]
+        df_binance = df_binance[(df_binance['quoteAsset'].isin(['BNB', 'BTC', 'BUSD', 'ETH', 'USDT']))]
+        df_binance.columns = ['Binance Pair', 'Currency', 'Market']
+        df_binance = df_binance.reset_index(drop = True)
+        df_binance.loc[0, 'Last Update'] = dt.date.today()
 
-    #     df_binance.to_csv('market_data/binance.txt', index = False)
-    # except:
-    #     pass
+        df_binance.to_csv('market_data/binance.txt', index = False)
+    except:
+        pass
 
     try:
         url = 'https://api.binance.us/api/v3/exchangeInfo'
         data = requests.get(url).json()
         df_binance_us = pd.DataFrame(data['symbols'])[pd.DataFrame(data['symbols'])['status'] == 'TRADING'][['symbol', 'baseAsset', 'quoteAsset']]
-        df_binance_us = df_binance_us[(df_binance_us['quoteAsset'].isin(['USDT']))]
+        df_binance_us = df_binance_us[(df_binance_us['quoteAsset'].isin(['BTC', 'BUSD', 'ETH', 'USD', 'USDT']))]
         df_binance_us.columns = ['Binance Pair', 'Currency', 'Market']
         df_binance_us = df_binance_us.reset_index(drop = True)
         df_binance_us.loc[0, 'Last Update'] = dt.date.today()
