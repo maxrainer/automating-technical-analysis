@@ -10,9 +10,9 @@ import gc
 pd.set_option("display.precision", 8)
 
 def data_update():
-    df_crypto = pd.read_csv('market_data/binance.txt')
-    #df_crypto = pd.read_csv('market_data/binance_us.txt')
-    #df_stocks = pd.read_csv('market_data/stocks.txt')
+    #df_crypto = pd.read_csv('market_data/binance.txt')
+    df_crypto = pd.read_csv('market_data/binance_us.txt')
+    df_stocks = pd.read_csv('market_data/stocks.txt')
     df_indexes = pd.read_csv('market_data/indexes.txt')
     df_futures = pd.read_csv('market_data/futures.txt')
     df_forex = pd.read_csv('market_data/forex.txt')
@@ -35,8 +35,8 @@ def date_utc(date_):
         
 class Data_Sourcing:
     def __init__(self):
-        self.df_crypto = pd.read_csv('market_data/binance.txt')
-        #self.df_crypto = pd.read_csv('market_data/binance_us.txt')
+        #self.df_crypto = pd.read_csv('market_data/binance.txt')
+        self.df_crypto = pd.read_csv('market_data/binance_us.txt')
         self.df_stocks = pd.read_csv('market_data/stocks.txt')
         self.df_indexes = pd.read_csv('market_data/indexes.txt')
         self.df_futures = pd.read_csv('market_data/futures.txt')
