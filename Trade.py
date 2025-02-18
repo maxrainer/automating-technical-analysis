@@ -2,12 +2,16 @@ from app.data_sourcing import Data_Sourcing, data_update
 from app.indicator_analysis import Indications
 from app.restapi import Rest_API
 from app.graph import Visualization
+from flask import Flask, jsonify, request
 from tensorflow.keras.models import load_model
 import streamlit as st 
 import gc
 
 gc.collect()
 #data_update()
+app = Flask(__name__)
+
+markets = ['BTC','ETH']
 
 def main(app_data):
     st.set_page_config(layout = "wide")
@@ -154,7 +158,12 @@ def main(app_data):
 
     technical_analysis_fig = analysis.technical_analysis_graph()
     st.plotly_chart(technical_analysis_fig, use_container_width = True) 
-    
+
+
+
+@app.route('/markets')
+def get_markets():
+    return jsonify(markets)  
 
 if __name__ == '__main__':
     import warnings
@@ -164,5 +173,5 @@ if __name__ == '__main__':
     action_model = load_model("models/action_prediction_model.h5")
     price_model = load_model("models/price_prediction_model.h5")
     app_data = Data_Sourcing()
-    restapi = Rest_API()
+    app.run(host='0.0.0.0', port=1111, debug=True)
     main(app_data = app_data)
