@@ -172,5 +172,5 @@ if __name__ == '__main__':
     action_model = load_model("models/action_prediction_model.h5")
     price_model = load_model("models/price_prediction_model.h5")
     app_data = Data_Sourcing()
-    app.run(host='0.0.0.0', port=1111, debug=True)
     main(app_data = app_data)
+    app.run(host='0.0.0.0',port=1111)
