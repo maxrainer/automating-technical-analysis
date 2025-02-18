@@ -9,3 +9,4 @@ scikit-learn==1.0.1
 streamlit
 tensorflow-cpu
 yfinance==0.1.70
+flask==3.1.0
