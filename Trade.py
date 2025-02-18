@@ -12,6 +12,7 @@ gc.collect()
 
 markets = ['BTC','ETH']
 
+
 def main(app_data):
     st.set_page_config(layout = "wide")
     indication = 'Predicted'
@@ -169,14 +170,16 @@ def setup_api_handler(uri, handler):
     tornado_app.wildcard_router.rules.insert(0, Rule(PathMatches(uri), handler))
 
 # Usage 
-class HelloHandlers(RequestHandler):
+class HelloHandler(RequestHandler):
   def get(self):
     self.write({'message': 'hello world'})
+    
+setup_api_handler('/api/hello', HelloHandler)
+
 
 if __name__ == '__main__':
     import warnings
     import gc
-    setup_api_handler('/api/hello', HelloHandlers)
     warnings.filterwarnings("ignore") 
     gc.collect()
     action_model = load_model("models/action_prediction_model.h5")
