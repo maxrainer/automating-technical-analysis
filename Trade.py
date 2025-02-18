@@ -162,7 +162,7 @@ def main(app_data):
 
 @st.cache_resource()
 def setup_api_handler(uri, handler):
-    print("Setup Tornado. Should be called only once")
+    #print("Setup Tornado. Should be called only once")
 
     # Get instance of Tornado
     tornado_app = next(o for o in gc.get_referrers(Application) if o.__class__ is Application)
@@ -173,8 +173,8 @@ def setup_api_handler(uri, handler):
 class HelloHandler(RequestHandler):
   def get(self):
     self.write({'message': 'hello world'})
-    
-setup_api_handler('/api/hello', HelloHandler)
+
+# setup_api_handler('/api/hello', HelloHandler)
 
 
 if __name__ == '__main__':
