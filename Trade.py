@@ -4,22 +4,15 @@ from app.graph import Visualization
 from tensorflow.keras.models import load_model
 import streamlit as st 
 import gc
+
 from tornado.web import Application, RequestHandler
 from tornado.routing import Rule, PathMatches
-
-import asyncio
-from streamlit import config
-from streamlit.web.server import Server
-from streamlit.web.server.media_file_handler import MediaFileHandler
-from streamlit.web.server.server import start_listening
-from streamlit.web.server.server_util import make_url_path_regex
 
 
 gc.collect()
 #data_update()
 
 markets = ['BTC','ETH']
-
 
 
 def main(app_data):
@@ -168,55 +161,34 @@ def main(app_data):
     technical_analysis_fig = analysis.technical_analysis_graph()
     st.plotly_chart(technical_analysis_fig, use_container_width = True) 
 
+if not hasattr(st, 'already_started_server'):
+    # Hack the fact that Python modules (like st) only load once to
+    # keep track of whether this file already ran.
+    st.already_started_server = True
 
-class CustomHandler(MediaFileHandler):
-    def get_content(self, abspath, start=None, end=None):
-        # Implement a custom handler here
-        return b''
-    
-class CustomServer(Server):
-    async def start(self):
-        # Override the start of the Tornado server, so we can add custom handlers
-        app = self._create_app()
+    st.write('''
+        The first time this script executes it will run forever because it's
+        running a Flask server.
 
-        # Add a new handler
-        app.default_router.add_rules([(
-                make_url_path_regex(config.get_option("server.baseUrlPath"),
-                                    f"custom/(.*)"),
-                CustomHandler,
-                {"path": ""},
-            ),
-        ])
+        Just close this browser tab and open a new one to see your Streamlit
+        app.
+    ''')
 
-        # Our new rules go before the rule matching everything, reverse the list
-        app.default_router.rules = list(reversed(app.default_router.rules))
+    from flask import Flask
 
-        start_listening(app)
-        await self._runtime.start()
+    app = Flask(__name__)
+
+    @app.route('/foo')
+    def serve_foo():
+        return 'This page is served via Flask!'
+
+    app.run(port=8888)
+
 
 if __name__ == '__main__':
     import warnings
     import gc
     warnings.filterwarnings("ignore") 
-
-    if '__streamlitmagic__' not in locals():
-    # Code adapted from bootstrap.py in streamlit
-        st.web.bootstrap._fix_sys_path(__file__)
-        st.web.bootstrap._fix_tornado_crash()
-        st.web.bootstrap._fix_sys_argv(__file__, [])
-        st.web.bootstrap._fix_pydeck_mapbox_api_warning()
-        st.web.bootstrap._fix_pydantic_duplicate_validators_error()
-        st.web.bootstrap._install_pages_watcher(__file__)
-
-    server = CustomServer(__file__, is_hello=False)
-
-    async def run_server():
-        await server.start()
-        st.web.bootstrap._on_server_start(server)
-        st.web.bootstrap._set_up_signal_handler(server)
-        await server.stopped
-
-    asyncio.run(run_server())
 
     gc.collect()
     action_model = load_model("models/action_prediction_model.h5")
