@@ -176,6 +176,7 @@ class HelloHandlers(RequestHandler):
 if __name__ == '__main__':
     import warnings
     import gc
+    setup_api_handler('/api/hello', HelloHandlers)
     warnings.filterwarnings("ignore") 
     gc.collect()
     action_model = load_model("models/action_prediction_model.h5")
