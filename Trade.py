@@ -7,10 +7,13 @@ import gc
 from tornado.web import Application, RequestHandler
 from tornado.routing import Rule, PathMatches
 
+import asyncio
+
 gc.collect()
 #data_update()
 
 markets = ['BTC','ETH']
+
 
 
 def main(app_data):
@@ -160,27 +163,55 @@ def main(app_data):
     st.plotly_chart(technical_analysis_fig, use_container_width = True) 
 
 
-@st.cache_resource()
-def setup_api_handler(uri, handler):
-    #print("Setup Tornado. Should be called only once")
+class CustomHandler(MediaFileHandler):
+    def get_content(self, abspath, start=None, end=None):
+        # Implement a custom handler here
+        return b''
+    
+class CustomServer(Server):
+    async def start(self):
+        # Override the start of the Tornado server, so we can add custom handlers
+        app = self._create_app()
 
-    # Get instance of Tornado
-    tornado_app = next(o for o in gc.get_referrers(Application) if o.__class__ is Application)
-    # Setup custom handler
-    tornado_app.wildcard_router.rules.insert(0, Rule(PathMatches(uri), handler))
+        # Add a new handler
+        app.default_router.add_rules([(
+                make_url_path_regex(config.get_option("server.baseUrlPath"),
+                                    f"custom/(.*)"),
+                CustomHandler,
+                {"path": ""},
+            ),
+        ])
 
-# Usage 
-class HelloHandler(RequestHandler):
-  def get(self):
-    self.write({'message': 'hello world'})
+        # Our new rules go before the rule matching everything, reverse the list
+        app.default_router.rules = list(reversed(app.default_router.rules))
 
-# setup_api_handler('/api/hello', HelloHandler)
-
+        start_listening(app)
+        await self._runtime.start()
 
 if __name__ == '__main__':
     import warnings
     import gc
     warnings.filterwarnings("ignore") 
+
+    if '__streamlitmagic__' not in locals():
+    # Code adapted from bootstrap.py in streamlit
+        st.web.bootstrap._fix_sys_path(__file__)
+        st.web.bootstrap._fix_tornado_crash()
+        st.web.bootstrap._fix_sys_argv(__file__, [])
+        st.web.bootstrap._fix_pydeck_mapbox_api_warning()
+        st.web.bootstrap._fix_pydantic_duplicate_validators_error()
+        st.web.bootstrap._install_pages_watcher(__file__)
+
+    server = CustomServer(__file__, is_hello=False)
+
+    async def run_server():
+        await server.start()
+        st.web.bootstrap._on_server_start(server)
+        st.web.bootstrap._set_up_signal_handler(server)
+        await server.stopped
+
+    asyncio.run(run_server())
+
     gc.collect()
     action_model = load_model("models/action_prediction_model.h5")
     price_model = load_model("models/price_prediction_model.h5")
