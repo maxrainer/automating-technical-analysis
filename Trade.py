@@ -209,7 +209,7 @@ if __name__ == '__main__':
         st.web.bootstrap._fix_pydantic_duplicate_validators_error()
         st.web.bootstrap._install_pages_watcher(__file__)
 
-    server = CustomServer(__file__, is_hello=False)
+    server = CustomServer(__file__)
 
     async def run_server():
         await server.start()
