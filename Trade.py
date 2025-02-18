@@ -182,7 +182,7 @@ if not hasattr(st, 'already_started_server'):
     def serve_foo():
         return 'This page is served via Flask!'
 
-    app.run(host='0.0.0.0',port=8888)
+    app.run(host='0.0.0.0',port=1111)
 
 
 if __name__ == '__main__':
