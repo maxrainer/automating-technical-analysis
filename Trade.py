@@ -146,7 +146,7 @@ def main(app_data):
     st.markdown(f'**Estimated Forecast Price:** The {label.lower()[:6]} {asset_suffix} for **{equity}** is estimated to be **{currency} {requested_prediction_price}** in the next **{forcast_prefix} {forcast_suffix}**. {str(confidence[analysis.score_price])}')
     if requested_prediction_action == 'Hold':
         st.markdown(f'**Recommended Trading Margins:** You should consider buying more **{equity}** {label.lower()[:6]} at **{currency} {buy_price}** and sell it at **{currency} {sell_price}**.')
-        st.markdown(f'**Recommended Win Percentage:** If consider buying with this margins win is: **1-({sell_price}/{buy_price})*100')
+        st.markdown(f'**Recommended Win Percentage:** If consider buying with this margins win is: ** {1-(sell_price/buy_price)*100} **')
 
     prediction_fig = analysis.prediction_graph(asset)
     
