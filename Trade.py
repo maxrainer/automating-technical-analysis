@@ -159,7 +159,6 @@ def main(app_data):
     st.plotly_chart(technical_analysis_fig, use_container_width = True) 
 
 
-
 @app.route('/markets')
 def get_markets():
     return jsonify(markets)  
@@ -173,4 +172,3 @@ if __name__ == '__main__':
     price_model = load_model("models/price_prediction_model.h5")
     app_data = Data_Sourcing()
     main(app_data = app_data)
-    app.run(host='0.0.0.0',port=1111)
