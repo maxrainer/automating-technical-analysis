@@ -1,6 +1,5 @@
 from app.data_sourcing import Data_Sourcing, data_update
 from app.indicator_analysis import Indications
-from app.restapi import Rest_API
 from app.graph import Visualization
 from flask import Flask, jsonify, request
 from tensorflow.keras.models import load_model
