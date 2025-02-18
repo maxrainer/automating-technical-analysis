@@ -45,8 +45,7 @@ class Data_Sourcing:
     def exchange_data(self, exchange):
         self.exchange = exchange
         if self.exchange == 'Binance':
-            # self.markets = np.sort(self.df_crypto['Market'].unique())
-            self.markets = self.df_crypto['Market'].unique()
+            self.markets = np.sort(self.df_crypto['Market'].unique())
         else: 
             self.stock_indexes = np.sort(self.df_stocks['Index Fund'].unique())
             self.indexes = np.sort(self.df_indexes['Indexes'].unique())
@@ -56,7 +55,7 @@ class Data_Sourcing:
     def market_data(self, market):
         self.market = market
         if self.exchange != 'Yahoo! Finance':
-            self.assets = np.sort(self.df_crypto[(self.df_crypto['Market'] == self.market)]['Currency'].unique())
+            self.assets = self.df_crypto[(self.df_crypto['Market'] == self.market)]['Currency'].unique()
             self.currency = self.market
         else:
             self.stocks = np.sort(self.df_stocks[(self.df_stocks['Index Fund'] == self.market)]['Company'].unique())
