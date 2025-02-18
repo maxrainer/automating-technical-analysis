@@ -8,11 +8,13 @@ from tornado.web import Application, RequestHandler
 from tornado.routing import Rule, PathMatches
 
 import asyncio
+import streamlit.web.bootstrap
 from streamlit import config
+from streamlit.web.server import Server
 from streamlit.web.server.media_file_handler import MediaFileHandler
 from streamlit.web.server.server import start_listening
 from streamlit.web.server.server_util import make_url_path_regex
-from streamlit.web.server import Server
+
 
 gc.collect()
 #data_update()
