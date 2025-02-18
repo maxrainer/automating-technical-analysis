@@ -8,7 +8,6 @@ from tornado.web import Application, RequestHandler
 from tornado.routing import Rule, PathMatches
 
 import asyncio
-import streamlit.web.bootstrap
 from streamlit import config
 from streamlit.web.server import Server
 from streamlit.web.server.media_file_handler import MediaFileHandler
@@ -209,7 +208,7 @@ if __name__ == '__main__':
         st.web.bootstrap._fix_pydantic_duplicate_validators_error()
         st.web.bootstrap._install_pages_watcher(__file__)
 
-    server = CustomServer(__file__)
+    server = CustomServer(__file__, is_hello=False)
 
     async def run_server():
         await server.start()
