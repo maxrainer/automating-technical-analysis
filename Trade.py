@@ -5,14 +5,8 @@ from tensorflow.keras.models import load_model
 import streamlit as st 
 import gc
 
-from tornado.web import Application, RequestHandler
-from tornado.routing import Rule, PathMatches
-
-
 gc.collect()
 #data_update()
-
-markets = ['BTC','ETH']
 
 
 def main(app_data):
@@ -160,30 +154,6 @@ def main(app_data):
 
     technical_analysis_fig = analysis.technical_analysis_graph()
     st.plotly_chart(technical_analysis_fig, use_container_width = True) 
-
-if not hasattr(st, 'already_started_server'):
-    # Hack the fact that Python modules (like st) only load once to
-    # keep track of whether this file already ran.
-    st.already_started_server = True
-
-    st.write('''
-        The first time this script executes it will run forever because it's
-        running a Flask server.
-
-        Just close this browser tab and open a new one to see your Streamlit
-        app.
-    ''')
-
-    from flask import Flask
-
-    app = Flask(__name__)
-
-    @app.route('/foo')
-    def serve_foo():
-        return 'This page is served via Flask!'
-
-    app.run(host='0.0.0.0',port=1111)
-
 
 if __name__ == '__main__':
     import warnings
