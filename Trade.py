@@ -169,7 +169,7 @@ def setup_api_handler(uri, handler):
     tornado_app.wildcard_router.rules.insert(0, Rule(PathMatches(uri), handler))
 
 # Usage 
-class HelloHandler(RequestHandler):
+class HelloHandlers(RequestHandler):
   def get(self):
     self.write({'message': 'hello world'})
 
@@ -181,5 +181,5 @@ if __name__ == '__main__':
     action_model = load_model("models/action_prediction_model.h5")
     price_model = load_model("models/price_prediction_model.h5")
     app_data = Data_Sourcing()
-    setup_api_handler('/api/hello', HelloHandler)
+    setup_api_handler('/api/hello', HelloHandlers)
     main(app_data = app_data)
