@@ -1,14 +1,14 @@
 from app.data_sourcing import Data_Sourcing, data_update
 from app.indicator_analysis import Indications
 from app.graph import Visualization
-from flask import Flask, jsonify, request
 from tensorflow.keras.models import load_model
 import streamlit as st 
 import gc
+from tornado.web import Application, RequestHandler
+from tornado.routing import Rule, PathMatches
 
 gc.collect()
 #data_update()
-app = Flask(__name__)
 
 markets = ['BTC','ETH']
 
@@ -159,9 +159,19 @@ def main(app_data):
     st.plotly_chart(technical_analysis_fig, use_container_width = True) 
 
 
-@app.route('/markets')
-def get_markets():
-    return jsonify(markets)  
+@st.cache_resource()
+def setup_api_handler(uri, handler):
+    print("Setup Tornado. Should be called only once")
+
+    # Get instance of Tornado
+    tornado_app = next(o for o in gc.get_referrers(Application) if o.__class__ is Application)
+    # Setup custom handler
+    tornado_app.wildcard_router.rules.insert(0, Rule(PathMatches(uri), handler))
+
+# Usage 
+class HelloHandler(RequestHandler):
+  def get(self):
+    self.write({'message': 'hello world'})
 
 if __name__ == '__main__':
     import warnings
@@ -171,4 +181,5 @@ if __name__ == '__main__':
     action_model = load_model("models/action_prediction_model.h5")
     price_model = load_model("models/price_prediction_model.h5")
     app_data = Data_Sourcing()
+    setup_api_handler('/api/hello', HelloHandler)
     main(app_data = app_data)
