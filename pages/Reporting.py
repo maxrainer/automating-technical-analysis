@@ -50,8 +50,8 @@ def main(app_data):
         {
             "Coin": [equity],
             "Predicted Action": [str(analysis.requested_prediction_action)],
-            "Buy Price": [float(buy_price)],
-            "Sell Price": [float(sell_price)]
+            "Buy Price": [buy_price],
+            "Sell Price": [sell_price]
         }
     )
     st.table(df1)
