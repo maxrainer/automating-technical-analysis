@@ -21,7 +21,9 @@ def main(app_data):
     requested_prediction_actions = []
     buy_prices = []
     sell_prices = []
+    margins = []
     binance_urls = []
+
     
     exchange = 'Binance'
     market = 'USDT'
@@ -76,6 +78,9 @@ def main(app_data):
         requested_prediction_prices.append(f'{float(requested_prediction_price):,.8f}')
         changes.append(float(analyse.df['Adj Close'].pct_change()[-1]) * 100)
         requested_prediction_actions.append(analyse.requested_prediction_action)
+        margin = (1-(float(risks[risk][1]) / float(risks[risk][0])))*100
+        margins.append(f'{float(margin)}')
+
         count += 1
 
     df1 = pd.DataFrame(
@@ -87,6 +92,7 @@ def main(app_data):
             "change": changes,
             "buy": buy_prices,
             "sell": sell_prices,
+            "margin": margins
         },
     )
     requested_date = analysis[0].df.index[-1]
@@ -112,6 +118,7 @@ def main(app_data):
             "prediction": "Predicted Price",
             "buy": "Buy Price",
             "sell": "Sell Price",
+            "margin": "Margin( %)"
         }
     )
 
