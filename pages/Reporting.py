@@ -31,10 +31,13 @@ def main(app_data):
     risks = {'Low': [analysis_day.df['S1'].values[-1], analysis_day.df['R1'].values[-1]], 
             'Medium': [analysis_day.df['S2'].values[-1], analysis_day.df['R2'].values[-1]],   
             'High': [analysis_day.df['S3'].values[-1], analysis_day.df['R3'].values[-1]],}
-    buy_price = float(risks[risk][0])
-    sell_price = float(risks[risk][1])
+    
+    st.markdown(f'Action: {float(risks[risk][0])}')
 
-    st.markdown(buy_price)
+    # buy_price = float(risks[risk][0])
+    # sell_price = float(risks[risk][1])
+
+    # st.markdown(buy_price)
 
     # current_price = f'{float(current_price):,.8f}'
     # requested_prediction_price = f'{float(requested_prediction_price):,.8f}'
