@@ -6,11 +6,11 @@ from tensorflow.keras.models import load_model
 gc.collect()
 
 
-def main():
+def main(app_data):
     st.sidebar.subheader('Interval:')
     interval = st.sidebar.selectbox('', ('1 Minute', '3 Minute', '5 Minute', '15 Minute', '30 Minute', '1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week'), index = 8)
     
-    
+
     st.markdown(f'test')
 
 
