@@ -4,6 +4,8 @@ from app.data_sourcing import Data_Sourcing, data_update
 from app.graph import Visualization
 from app.indicator_analysis import Indications
 from tensorflow.keras.models import load_model
+import pandas as pd
+import numpy as np
 
 gc.collect()
 
@@ -31,20 +33,28 @@ def main(app_data):
     risks = {'Low': [analysis_day.df['S1'].values[-1], analysis_day.df['R1'].values[-1]], 
             'Medium': [analysis_day.df['S2'].values[-1], analysis_day.df['R2'].values[-1]],   
             'High': [analysis_day.df['S3'].values[-1], analysis_day.df['R3'].values[-1]],}
-    
-    st.markdown(f'Action: {float(risks[risk][0])}')
 
-    # buy_price = float(risks[risk][0])
-    # sell_price = float(risks[risk][1])
+    buy_price = float(risks[risk][0])
+    sell_price = float(risks[risk][1])
 
     # st.markdown(buy_price)
 
-    # current_price = f'{float(current_price):,.8f}'
-    # requested_prediction_price = f'{float(requested_prediction_price):,.8f}'
-    # buy_price = f'{float(buy_price):,.8f}'
-    # sell_price = f'{float(sell_price):,.8f}'
+    current_price = f'{float(current_price):,.8f}'
+    requested_prediction_price = f'{float(requested_prediction_price):,.8f}'
+    buy_price = f'{float(buy_price):,.8f}'
+    sell_price = f'{float(sell_price):,.8f}'
 
     st.markdown(f'Action: {str(analysis.requested_prediction_action)}')
+
+    df1 = pd.DataFrame(
+        {
+            "Coin": [equity],
+            "Predicted Action": [str(analysis.requested_prediction_action)],
+            "Buy Price": [float(buy_price)],
+            "Sell Price": [float(sell_price)]
+        }
+    )
+    st.table(df1)
     st.markdown(f'test')
 
 
