@@ -102,7 +102,7 @@ def main(app_data):
         df1,
         hide_index=True,
         width=1200,
-        column_order=["coin", "action", "current", "change", "prediction", "buy", "sell"],
+    column_order=["coin", "action", "current", "change", "prediction", "buy", "sell", "margin"],
         column_config={
             "coin": st.column_config.LinkColumn(
                 "Coin",
@@ -118,7 +118,7 @@ def main(app_data):
             "prediction": "Predicted Price",
             "buy": "Buy Price",
             "sell": "Sell Price",
-            "margin": "Margin( %)"
+            "margin": "Margin(%)"
         }
     )
 
