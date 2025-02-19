@@ -72,14 +72,14 @@ def main(app_data):
         risks = {'Low': [analysis_days[count].df['S1'].values[-1], analysis_days[count].df['R1'].values[-1]], 
             'Medium': [analysis_days[count].df['S2'].values[-1], analysis_days[count].df['R2'].values[-1]],   
             'High': [analysis_days[count].df['S3'].values[-1], analysis_days[count].df['R3'].values[-1]],}
-        buy_prices.append(f'{float(risks[risk][0]):,.8f}')
-        sell_prices.append(f'{float(risks[risk][1]):,.8f}')
-        current_prices.append(f'{float(current_price):,.8f}')
-        requested_prediction_prices.append(f'{float(requested_prediction_price):,.8f}')
+        buy_prices.append(f'{float(risks[risk][0]):,.6f}')
+        sell_prices.append(f'{float(risks[risk][1]):,.6f}')
+        current_prices.append(f'{float(current_price):,.6f}')
+        requested_prediction_prices.append(f'{float(requested_prediction_price):,.6f}')
         changes.append(float(analyse.df['Adj Close'].pct_change()[-1]) * 100)
         requested_prediction_actions.append(analyse.requested_prediction_action)
-        margin = (1-(float(risks[risk][1]) / float(risks[risk][0])))*100
-        margins.append(f'{float(margin)}')
+        margin = ((float(risks[risk][1]) / float(risks[risk][0])*100)-100)
+        margins.append(f'{float(margin):,.2f}')
 
         count += 1
 
@@ -110,15 +110,18 @@ def main(app_data):
                 display_text=r"https://www.binance.com/en/trade/(.*?)_USDC.*"
             ),
             "action": "Action",
-            "current": "Current Price",
+            "current": "Current($)",
             "change":  st.column_config.NumberColumn(
-                    "Change(%)",
-                    format="%.2f",
+                    "Change",
+                    format="%.2f%%"
             ),
-            "prediction": "Predicted Price",
-            "buy": "Buy Price",
-            "sell": "Sell Price",
-            "margin": "Margin(%)"
+            "prediction": "Predicted($)",
+            "buy": "Buy Limit",
+            "sell": "Sell Limit",
+            "margin": st.column_config.NumberColumn(
+                "Margin",
+                format="%.2f%%"
+            )
         }
     )
 
