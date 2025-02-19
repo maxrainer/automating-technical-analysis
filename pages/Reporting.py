@@ -14,6 +14,7 @@ def main(app_data):
     indication = 'Predicted'
     # to be changed
     equity = 'BTC'
+    risk='Medium'
 
 
     st.sidebar.subheader('Interval:')
@@ -32,6 +33,8 @@ def main(app_data):
             'Medium': [analysis_day.df['S2'].values[-1], analysis_day.df['R2'].values[-1]],   
             'High': [analysis_day.df['S3'].values[-1], analysis_day.df['R3'].values[-1]],}
     
+    buy_price = float(risks[risk][0])
+    sell_price = float(risks[risk][1])
     current_price = f'{float(current_price):,.8f}'
     requested_prediction_price = f'{float(requested_prediction_price):,.8f}'
     buy_price = f'{float(buy_price):,.8f}'
