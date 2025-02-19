@@ -16,7 +16,6 @@ def main(app_data):
     equity = 'BTC'
     risk='Medium'
 
-
     st.sidebar.subheader('Interval:')
     interval = st.sidebar.selectbox('', ('1 Minute', '3 Minute', '5 Minute', '15 Minute', '30 Minute', '1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week'), index = 8)
 
@@ -32,9 +31,9 @@ def main(app_data):
     risks = {'Low': [analysis_day.df['S1'].values[-1], analysis_day.df['R1'].values[-1]], 
             'Medium': [analysis_day.df['S2'].values[-1], analysis_day.df['R2'].values[-1]],   
             'High': [analysis_day.df['S3'].values[-1], analysis_day.df['R3'].values[-1]],}
-    
     buy_price = float(risks[risk][0])
     sell_price = float(risks[risk][1])
+
     current_price = f'{float(current_price):,.8f}'
     requested_prediction_price = f'{float(requested_prediction_price):,.8f}'
     buy_price = f'{float(buy_price):,.8f}'
