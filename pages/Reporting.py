@@ -44,12 +44,12 @@ def main(app_data):
     buy_price = f'{float(buy_price):,.8f}'
     sell_price = f'{float(sell_price):,.8f}'
 
-    st.markdown(f'Action: {str(analysis.requested_prediction_action)}')
-
     df1 = pd.DataFrame(
         {
             "Coin": [equity],
             "Predicted Action": [str(analysis.requested_prediction_action)],
+            "Current Price": [current_price],
+            "Prediction Price": [requested_prediction_price],
             "Buy Price": [buy_price],
             "Sell Price": [sell_price]
         }
