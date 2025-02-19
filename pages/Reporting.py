@@ -41,9 +41,9 @@ def main(app_data):
             'High': [analysis_days[count].df['S3'].values[-1], analysis_days[count].df['R3'].values[-1]],}
         buy_prices.append(f'{float(risks[risk][0]):,.8f}')
         sell_prices.append(f'{float(risks[risk][1]):,.8f}')
-        current_prices.append(f'{float(analyse.df['Adj Close'][-1]):,.8f}')
+        current_prices.append(f'{float(current_price):,.8f}')
+        requested_prediction_prices.append(f'{float(requested_prediction_price):,.8f}')
         changes.append(float(analyse.df['Adj Close'].pct_change()[-1]) * 100)
-        requested_prediction_prices.append(f'{float(analyse.requested_prediction_price):,.8f}')
         requested_prediction_actions.append(str(analyse.requested_prediction_action))
         count += 1
 
