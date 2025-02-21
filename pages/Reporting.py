@@ -47,7 +47,6 @@ def main(app_data):
     _equity_percentage = 100/equitys.size
     progress_bar = st.progress(0, "Awaiting first carrier pigeon. Please don't shoot.")
     percentage_complete = 0
- #   for percentage_complete in range(100):
     for equity in equitys: 
         percentage_complete = int(percentage_complete + _equity_percentage)
         if percentage_complete > 100: 
