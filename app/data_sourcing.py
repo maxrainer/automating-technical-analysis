@@ -93,8 +93,9 @@ class Data_Sourcing:
                     url = f"https://api.binance.com/api/v3/klines?symbol={self.ticker_market}&interval={self.exchange_interval}&limit={limit}"
                     self.df = pd.DataFrame(json.loads(requests.get(url).text))
                 except:
-                    url = f"https://api.binance.us/api/v3/klines?symbol={self.ticker_market}&interval={self.exchange_interval}&limit={limit}"
-                    self.df = pd.DataFrame(json.loads(requests.get(url).text))
+                    pass
+#                    url = f"https://api.binance.us/api/v3/klines?symbol={self.ticker_market}&interval={self.exchange_interval}&limit={limit}"
+#                    self.df = pd.DataFrame(json.loads(requests.get(url).text))
                 self.df.columns = ['open_time', 'Open', 'High', 'Low', 'Adj Close', 'Volume', 'close_time', 
                                 'quoted average volume', 'num_trades', 'taker_base_vol', 'taker_quote_vol', 'ignore']
                 self.df['Date'] = [dt.datetime.fromtimestamp(x/1000.0).replace(microsecond = 0) for x in self.df.open_time]

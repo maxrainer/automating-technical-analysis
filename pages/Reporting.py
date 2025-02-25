@@ -6,13 +6,12 @@ from app.indicator_analysis import Indications
 from tensorflow.keras.models import load_model
 import pandas as pd
 import numpy as np
-import time
+from concurrent.futures import ThreadPoolExecutor
+from time import sleep
 
 exchange = 'Binance'
 market = 'USDT'
 indication = 'Predicted'
-# to be changed
-#risk='Medium'
 
 
 def get_data_source():
@@ -34,34 +33,44 @@ def get_data_source():
 def equity_to_link(equity):
     return "https://www.binance.com/en/trade/" + equity + "_USDC?_from=markets&type=spot"
 
+
+def compute_per_equity(equity, equitys, analysis, analysis_days, binance_urls, to_be_deleted, interval):
+    st.write("inner")
+    try:
+        analysis.append(Visualization(exchange, interval, equity, indication, action_model, price_model, market))
+        analysis_days.append(Indications(exchange, interval, equity, market))
+    except Exception as error: 
+        to_be_deleted.append(pd.Index(equitys).get_loc(equity))
+    else: 
+        binance_urls.append(equity_to_link(equity))
+    return equity
+
 def compute_model(equitys, interval):
+    max_threads = 20
     analysis = []
     analysis_days = []
     binance_urls = []
     coins = []
 
-    _to_be_deleted = []
-    _equity_percentage = 100/equitys.size
+    to_be_deleted = []
+    _equity_percentage = float(1.0/float(equitys.size))
     progress_bar = st.progress(0, "Awaiting first carrier pigeon. Please don't shoot.")
-    percentage_complete = 0
-    for equity in equitys: 
-        percentage_complete = int(percentage_complete + _equity_percentage)
-        if percentage_complete > 100: 
-            percentage_complete = 100
-        try:
-            analysis.append(Visualization(exchange, interval, equity, indication, action_model, price_model, market))
-            analysis_days.append(Indications(exchange, '1 Day', equity, market))
-        except Exception as error: 
-#            st.markdown(type(error).__name__)
-            progress_bar.progress(percentage_complete, text=f'SHOT BY HUNTER! **{equity}** is dead')
-            _to_be_deleted.append(pd.Index(equitys).get_loc(equity))
-        else: 
-            progress_bar.progress(percentage_complete, text=f'Carrier pigeon arrived for **{equity}**')
-            binance_urls.append(equity_to_link(equity))
-            coins.append(equity)
+    percentage_complete = float(0.0)
+    pool = ThreadPoolExecutor(max_workers=max_threads)
+    threads = []
+
+    for equity in equitys:
+        threads.append(pool.submit(compute_per_equity, equity, equitys, analysis, analysis_days, binance_urls, to_be_deleted, interval))
+
+    for t in threads:
+        percentage_complete = float(percentage_complete + _equity_percentage)
+        while not t.done():
+            sleep(1)
+        equity = t.result()
+        progress_bar.progress(percentage_complete, text=f'Carrier pigeon arrived for **{equity}**')
 
     progress_bar.empty()
-    for d in _to_be_deleted:
+    for d in to_be_deleted:
         equitys = equitys.drop(d)
     return analysis, analysis_days, binance_urls, coins
 
