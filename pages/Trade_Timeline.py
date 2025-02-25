@@ -8,6 +8,8 @@ import pandas as pd
 import numpy as np
 import time
 from bokeh.plotting import figure
+from concurrent.futures import ThreadPoolExecutor
+from time import sleep
 
 exchange = 'Binance'
 market = 'USDT'
@@ -19,7 +21,7 @@ intervals = ['1 Minute', '3 Minute', '5 Minute', '15 Minute', '30 Minute', '1 Ho
 def compute_model(equity, interval):
     analysis = Visualization(exchange, interval, equity, indication, action_model, price_model, market)
     analysis_days = Indications(exchange, interval, equity, market)
-    return analysis, analysis_days
+    return analysis, analysis_days, interval
 
 def get_data_source():
     data_source = pd.read_csv('market_data/binance_reporting_long.txt')
@@ -128,6 +130,7 @@ def get_linechart(result_list):
     st.bokeh_chart(p)
 
 def main(ds):
+    max_threads=10
     result_list = []
     with st.sidebar:
         get_menu_left()
@@ -139,17 +142,24 @@ def main(ds):
     _interval_percentage = float(1.0/len(intervals))
     progress_bar = st.progress(0, "Collection & processing data.")
     percentage_complete = float(0.0)
-    count = 1
+    pool = ThreadPoolExecutor(max_workers=max_threads)
+    threads = []
     for interval in intervals:
+        threads.append(pool.submit(compute_model, st.session_state.equity, interval))  
+ 
+    count = 1
+    for t in threads:
         percentage_complete = float(percentage_complete + _interval_percentage)
+        progress_bar.progress(percentage_complete, text=f'Interval {count} in progress...')
+        while not t.done():
+            sleep(1)
         try:
-            analysis, analysis_days= compute_model(st.session_state.equity, interval)
+            analysis, analysis_days, interval = t.result()
             result_list.append(build_result_dict(analysis, analysis_days, interval, count))
         except:
             pass
         count += 1
-        progress_bar.progress(percentage_complete, text=f'Interval **{interval}** done')
-            
+
     progress_bar.empty()
     get_linechart(result_list)
     get_dataframe(result_list)
