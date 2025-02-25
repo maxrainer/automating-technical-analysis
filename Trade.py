@@ -1,3 +1,4 @@
+# python -m streamlit run Trade.py
 from app.data_sourcing import Data_Sourcing, data_update
 from app.indicator_analysis import Indications
 from app.graph import Visualization
