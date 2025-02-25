@@ -6,7 +6,6 @@ from app.indicator_analysis import Indications
 from tensorflow.keras.models import load_model
 import pandas as pd
 import numpy as np
-import time
 from bokeh.plotting import figure
 from concurrent.futures import ThreadPoolExecutor
 from time import sleep
@@ -14,9 +13,7 @@ from time import sleep
 exchange = 'Binance'
 market = 'USDT'
 indication = 'Predicted'
-intervals = ['1 Minute', '3 Minute', '5 Minute', '15 Minute', '30 Minute', '1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week']
-#intervals = ['1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week']
-
+intervals = ['5 Minute', '30 Minute', '1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week']
 
 def compute_model(equity, interval):
     analysis = Visualization(exchange, interval, equity, indication, action_model, price_model, market)
@@ -121,7 +118,7 @@ def get_linechart(result_list):
         count += 1
     p = figure(width=450, height=350, title="Forecast", x_axis_label = "intervals", y_axis_label="USD")
     p.line(counts, forecast, legend_label="Prediction", line_width=4)
-    p.line(counts, currents, legend_label="Current", line_color="grey", line_width=2 )
+    p.line(counts, currents, legend_label="Current ", line_color="grey", line_width=2 )
     p.line(counts, buy_limits, legend_label="Buy Limit", line_color="green", line_width=1)
     p.line(counts, sell_limits, legend_label="Sell Limit", line_color="red", line_width=1)
     
@@ -162,6 +159,7 @@ def main(ds):
 
     progress_bar.empty()
     get_linechart(result_list)
+    st.markdown(f"Current price: **USD {str(result_list[0]['current_price'])}**")
     get_dataframe(result_list)
 
 
