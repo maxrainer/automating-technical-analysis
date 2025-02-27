@@ -33,16 +33,27 @@ def get_data_source():
 def equity_to_link(equity):
     return "https://www.binance.com/en/trade/" + equity + "_USDC?_from=markets&type=spot"
 
+def get_lock(lock):
+    while lock: 
+        sleep(0.1)
+    lock = True
 
-def compute_per_equity(equity, equitys, analysis, analysis_days, binance_urls, to_be_deleted, interval):
-    st.write("inner")
+def release_lock(lock):
+    lock = False
+
+def compute_per_equity(equity, equitys, analysis, analysis_days, binance_urls, to_be_deleted, interval, lock):
     try:
-        analysis.append(Visualization(exchange, interval, equity, indication, action_model, price_model, market))
-        analysis_days.append(Indications(exchange, interval, equity, market))
+        vis = Visualization(exchange, interval, equity, indication, action_model, price_model, market)
+        ind = Indications(exchange, interval, equity, market)
     except Exception as error: 
+        print("error" + str(error))
         to_be_deleted.append(pd.Index(equitys).get_loc(equity))
     else: 
+        get_lock(lock)
+        analysis.append(vis)
+        analysis_days.append(ind)
         binance_urls.append(equity_to_link(equity))
+        release_lock(lock)
     return equity
 
 def compute_model(equitys, interval):
@@ -60,7 +71,7 @@ def compute_model(equitys, interval):
     threads = []
 
     for equity in equitys:
-        threads.append(pool.submit(compute_per_equity, equity, equitys, analysis, analysis_days, binance_urls, to_be_deleted, interval))
+        threads.append(pool.submit(compute_per_equity, equity, equitys, analysis, analysis_days, binance_urls, to_be_deleted, interval, lock=False))
 
     for t in threads:
         percentage_complete = float(percentage_complete + _equity_percentage)
