@@ -15,15 +15,6 @@ market = 'USDT'
 indication = 'Predicted'
 intervals = ['5 Minute', '30 Minute', '1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week']
 
-
-def get_lock(lock):
-    while lock: 
-        sleep(0.1)
-    lock = True
-
-def release_lock(lock):
-    lock = False
-
 def compute_model(equity, interval):
     analysis = Visualization(exchange, interval, equity, indication, action_model, price_model, market)
     analysis_days = Indications(exchange, interval, equity, market)

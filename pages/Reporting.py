@@ -57,7 +57,7 @@ def compute_per_equity(equity, equitys, analysis, analysis_days, binance_urls, t
     return equity
 
 def compute_model(equitys, interval):
-    max_threads = 20
+    max_threads = 30
     analysis = []
     analysis_days = []
     binance_urls = []
