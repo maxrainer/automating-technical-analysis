@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from time import sleep
+from time import tzname
 
 exchange = 'Binance'
 market = 'USDT'
@@ -234,7 +235,8 @@ def main(ds):
     ds = analyze(ds, analysis, analysis_days)
 
     requested_date = analysis[0].df.index[-1]
-    st.write(f'**Prediction Date & Time (UTC):** {str(requested_date)}')
+    print(requested_date)
+    st.write(f'**Prediction Date & Time ({ tzname[0] }):** {str(requested_date)}')
     st.write(f'**Time frame forecast:** {st.session_state.interval}')
     st.write(f'(*) Probability/Confidence forecast will occur')
 

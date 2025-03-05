@@ -5,6 +5,7 @@ from app.graph import Visualization
 from tensorflow.keras.models import load_model
 import streamlit as st 
 import gc
+from time import tzname
 
 gc.collect()
 #data_update()
@@ -141,7 +142,7 @@ def main(app_data):
 
     asset_suffix = 'price'
 
-    st.markdown(f'**Prediction Date & Time (UTC):** {str(requested_date)}.')
+    st.markdown(f'**Prediction Date & Time ({ tzname[0] }):** {str(requested_date)}.')
     st.markdown(f'**Current Price:** {currency} {current_price}.')
     st.markdown(f'**{interval} Price Change:** {change_display}.')
     st.markdown(f'**Recommended Trading Action:** You should **{requested_prediction_action.lower()}** {present_statement_prefix} this {label.lower()[:6]}{present_statement_suffix}. {str(confidence[analysis.score_action])}')

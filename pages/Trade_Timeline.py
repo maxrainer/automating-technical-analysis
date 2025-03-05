@@ -13,7 +13,7 @@ from time import sleep
 exchange = 'Binance'
 market = 'USDT'
 indication = 'Predicted'
-intervals = ['5 Minute', '30 Minute', '1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week']
+intervals = ['5 Minute', '15 Minute', '30 Minute', '1 Hour', '6 Hour', '12 Hour', '1 Day', '1 Week']
 
 def compute_model(equity, interval):
     analysis = Visualization(exchange, interval, equity, indication, action_model, price_model, market)
