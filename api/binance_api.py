@@ -61,14 +61,17 @@ class BinanceAPI():
         response = self.session.get(self.url, params=self.payload)
         print(response.content)
     
-    def general_order(self, symbol, side, type, usd):
+    def general_order(self, symbol, side, type, usd=0, qty=0):
         self.url_builder('api/v3/order')
         self.session.headers.update({'X-MBX-APIKEY': self.api_key})
         self.session.headers.update({'Content-Type': 'application/json;charset=utf-8"'})
         self.payload['symbol'] = symbol
         self.payload['side']= side
         self.payload['type']= type
-        self.payload['quoteOrderQty']= str(usd)
+        if usd != 0: 
+            self.payload['quoteOrderQty']= str(usd)
+        elif qty != 0:
+            self.payload['quantity']= str(qty)
         self.payload['timestamp']= self.get_timestamp() 
         self.payload['signature'] = self.get_signature(self.payload)
         response = self.session.post(self.url, params=self.payload)
@@ -80,8 +83,18 @@ class BinanceAPI():
         self.payload['symbol'] = symbol
         response = self.session.get(self.url, params=self.payload)
         data = response.json()
-        print (data)
         return data['price']
+
+    def getAccountInfo(self):
+        self.url_builder('api/v3/account')
+        self.session.headers.update({'Content-Type': 'application/json;charset=utf-8"'})
+        self.session.headers.update({'X-MBX-APIKEY': self.api_key})
+        self.session.headers.update({'Content-Type': 'application/json;charset=utf-8"'})
+        self.payload['timestamp']= self.get_timestamp() 
+        self.payload['signature'] = self.get_signature(self.payload)
+        response = self.session.get(self.url, params=self.payload)
+        data = response.json()
+        return data
     
     def sign_request(self):
         if self.payload:

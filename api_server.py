@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from app.auto_helper import Auto_Helper
 from app.api_predictions import Api_Predictions
 from api.binance_api import BinanceAPI
@@ -45,7 +45,17 @@ def get_buy():
         order = binanceAPI.general_order(symbol, 'BUY', 'MARKET', usd)
         return jsonify(order)
 
+@app.route('/price', methods=['POST'])
+def get_price():
+    if request.method == 'POST':
+        data = request.json
+        coin = data['coin']
+        symbol = coin + symbolUSD
+        price = binanceAPI.GET_current_price(symbol)
+        return jsonify(price)
+
 # json dict coin, usd
+# sells a specific coin amount in usd
 @app.route('/sell', methods=['POST'])
 def get_sell():
     if request.method == 'POST':
@@ -53,8 +63,25 @@ def get_sell():
         coin = data['coin']
         symbol = coin + symbolUSD
         usd = float(data['usd'])
-        order = binanceAPI.general_order(symbol, 'SELL', 'MARKET', usd)
+        order = binanceAPI.general_order(symbol, 'SELL', 'MARKET', usd=usd)
         return jsonify(order)
+
+@app.route('/sellall', methods=['POST'])
+def get_sellall():
+    if request.method == 'POST':
+        data = request.json
+        coin = data['coin']
+        symbol = coin + symbolUSD
+        print (symbol)
+        accountInfo = binanceAPI.getAccountInfo()
+        balances = accountInfo['balances']
+        asset = next(item for item in balances if item["asset"] == coin)
+        qty = float(asset['free'])
+        if qty > 0:
+            print(qty)
+            order = binanceAPI.general_order(symbol, 'SELL', 'MARKET', qty=qty)
+            return jsonify(order)
+        return ("empty")
 
 if __name__ == '__main__':  
    ap = Api_Predictions()
