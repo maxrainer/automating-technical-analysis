@@ -72,14 +72,13 @@ def get_sellall():
         data = request.json
         coin = data['coin']
         symbol = coin + symbolUSD
-        print (symbol)
         accountInfo = binanceAPI.getAccountInfo()
         balances = accountInfo['balances']
         asset = next(item for item in balances if item["asset"] == coin)
         qty = float(asset['free'])
-        if qty > 0:
-            print(qty)
-            order = binanceAPI.general_order(symbol, 'SELL', 'MARKET', qty=qty)
+        qty_sell = binanceAPI.getSellQty(qty, coin)
+        if qty_sell > 0:
+            order = binanceAPI.general_order(symbol, 'SELL', 'MARKET', qty=qty_sell)
             return jsonify(order)
         return ("empty")
 

@@ -4,6 +4,8 @@ import hmac
 import hashlib
 import time
 import base64
+import yaml
+import math
 from urllib.parse import urlencode
 
 # default endpoint
@@ -112,3 +114,24 @@ class BinanceAPI():
         self.general_order(symbol, side, 'LIMIT', quantity)
         self.payload['TimeInForce']= 'GTC'
         self.payload['stoploa']
+
+    def getSellQty(self, qty, coin):
+        if qty == 0:
+            return 0
+        coin_lot_size = self.getExchangeInfo(coin)
+        if qty < coin_lot_size['minQty']: 
+            return 0
+        result_qty = self.truncate(qty, coin_lot_size['dec'])
+        return result_qty
+
+    def getExchangeInfo(self, coin):
+        with open("api/exchangeInfo.yml", 'r') as stream:
+            try:
+                exchange_info = yaml.safe_load(stream)
+                coin_lot_size = exchange_info['lot_size'][coin]
+                return coin_lot_size
+            except yaml.YAMLError as exc:
+                print(exc)
+    
+    def truncate(self, f, n):
+        return math.floor(f * 10 ** n) / 10 ** n

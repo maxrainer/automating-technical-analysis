@@ -1,0 +1,33 @@
+---
+#{{url}}/api/v3/exchangeInfo?symbol=XRPUSDC
+lot_size:
+  XRP:
+    minQty: 1.0
+    maxQty: 9222449.0
+    stepSize: 1.0
+    dec: 0
+  BTC: 
+    minQty: 0.00001
+    maxQty: 9000.0
+    stepSize: 0.00001
+    dec: 5
+  BNB: 
+    minQty: 0.001
+    maxQty: 900000.0
+    stepSize: 0.001
+    dec: 3
+  SOL:
+    minQty: 0.001
+    maxQty: 900000.0
+    stepSize: 0.001
+    dec: 3
+  ETH:
+    minQty: 0.0001
+    maxQty: 9000.0
+    stepSize: 0.0001
+    dec: 4
+  SUI: 
+    minQty: 0.1
+    maxQty: 92141578.0
+    stepSize: 0.1
+    dec: 1
