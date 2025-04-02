@@ -20,6 +20,14 @@ class BinanceAPI():
         self.payload = {}
         self.session = requests.Session()
         self.endpoint = 'https://testnet.binance.vision/'
+    
+    def __init__(self, endpoint='', api_key='', api_secret=''):
+        self.api_key = api_key
+        self.endpoint = endpoint
+        self. api_secret = api_secret
+        self.payload = {}
+        self.session = requests.Session()
+        self.url = ''
 
     def set_keys(self, api_key, api_secret):
         self.api_key = api_key
@@ -83,7 +91,9 @@ class BinanceAPI():
         self.url_builder('api/v3/ticker/price')
         self.session.headers.update({'Content-Type': 'application/json;charset=utf-8"'})
         self.payload['symbol'] = symbol
+        print(symbol)
         response = self.session.get(self.url, params=self.payload)
+        print (response.json())
         data = response.json()
         return data['price']
 
